@@ -8,10 +8,12 @@ import LandingPage from './pages/LandingPage';
 import AdminPage from './pages/AdminPage';
 import NotFound from './pages/NotFound';
 import { NotificationProvider, useNotification } from './components/ui/NotificationContext';
+import SplashScreen from './components/ui/SplashScreen';
 
 const AppInner: React.FC = () => {
   const [content, setContent] = useState<CMSContent>(INITIAL_CONTENT);
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
   const { showToast } = useNotification();
 
   useEffect(() => {
@@ -51,6 +53,8 @@ const AppInner: React.FC = () => {
         }
       } catch (err) {
         console.error('Unexpected error loading content:', err);
+      } finally {
+        setIsInitialLoading(false);
       }
     };
 
@@ -152,12 +156,15 @@ const AppInner: React.FC = () => {
     }
   };
 
+  if (isInitialLoading) {
+    return <SplashScreen />;
+  }
+
   return (
     <Router>
       <Routes>
         <Route path="/" element={<LandingPage content={content} toggleTheme={toggleTheme} />} />
         <Route path="/admin" element={<AdminPage content={content} onSave={saveContent} />} />
-        {/* Fallback to home */}
         <Route path="*" element={<NotFound content={content.notFound} />} />
       </Routes>
     </Router>
