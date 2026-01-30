@@ -134,3 +134,11 @@ export interface CMSContent {
 }
 
 export type SectionKey = keyof CMSContent;
+
+export interface Lead {
+  id: string;
+  created_at: string;
+  name: string;
+  email: string;
+  contacted: boolean;
+}

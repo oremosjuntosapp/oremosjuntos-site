@@ -101,7 +101,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ content, toggleTheme }) => {
         return (
             <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 animate-in fade-in duration-300">
                 <div className="absolute inset-0 bg-stone-900/90 backdrop-blur-xl" onClick={() => setActiveModal(null)} />
-                <div className="relative w-full max-w-2xl bg-white dark:bg-stone-900 rounded-3xl p-10 shadow-2xl overflow-hidden">
+                <div className="relative w-full max-w-2xl bg-white dark:bg-background-surface rounded-3xl p-10 shadow-2xl overflow-hidden">
                     <div className="absolute top-0 right-0 p-8">
                         <button onClick={() => setActiveModal(null)} className="p-2 rounded-full hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors">
                             <span className="material-icons-outlined">close</span>
@@ -125,7 +125,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ content, toggleTheme }) => {
         return (
             <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 animate-in fade-in duration-300">
                 <div className="absolute inset-0 bg-stone-900/90 backdrop-blur-xl" onClick={() => setActiveFeatureModal(null)} />
-                <div className="relative w-full max-w-lg bg-white dark:bg-stone-900 rounded-3xl p-10 shadow-2xl overflow-hidden text-center">
+                <div className="relative w-full max-w-lg bg-white dark:bg-background-surface rounded-3xl p-10 shadow-2xl overflow-hidden text-center">
                     <div className="absolute top-0 right-0 p-8">
                         <button onClick={() => setActiveFeatureModal(null)} className="p-2 rounded-full hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors">
                             <span className="material-icons-outlined">close</span>
@@ -154,16 +154,13 @@ const LandingPage: React.FC<LandingPageProps> = ({ content, toggleTheme }) => {
         <div className="min-h-screen selection:bg-gold selection:text-white transition-colors duration-500 pb-20 sm:pb-0">
             <header className={`fixed top-0 w-full z-50 transition-all duration-500 ${scrolled ? 'bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md border-b border-stone-200 dark:border-stone-800 py-4' : 'bg-transparent py-6'}`}>
                 <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
-                    <div className="flex items-center space-x-2">
-                        <span className="text-2xl font-serif font-bold tracking-tight">Oremos Juntos<span className="text-gold">.</span></span>
+                    <div className="flex items-center">
+                        <img src="/brand/logo.png" alt="Oremos Juntos" className="h-[72px] w-auto object-contain dark:brightness-0 dark:invert transition-all duration-500" />
                     </div>
                     <div className="flex items-center space-x-4">
                         <div className="hidden sm:flex items-center px-4 py-1.5 rounded-full border border-gold/30 bg-gold/5">
                             <span className="text-[8px] font-bold tracking-[0.3em] uppercase text-gold animate-pulse">{content.header.launchBadge}</span>
                         </div>
-                        <button onClick={handleCMSClick} className="p-2 rounded-full hover:bg-stone-200 dark:hover:bg-stone-800 transition-colors" title="CMS">
-                            <span className="material-icons-outlined text-xl leading-none">edit_note</span>
-                        </button>
                         <button onClick={toggleTheme} className="p-2 rounded-full hover:bg-stone-200 dark:hover:bg-stone-800 transition-colors">
                             <span className="material-icons-outlined text-xl leading-none dark:hidden">dark_mode</span>
                             <span className="material-icons-outlined text-xl leading-none hidden dark:block">light_mode</span>
@@ -182,7 +179,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ content, toggleTheme }) => {
                                     <div className="absolute inset-0 z-0">
                                         <img
                                             src={content.hero.backgroundImage}
-                                            className="w-full h-full object-cover opacity-10 dark:opacity-5 scale-110"
+                                            className="w-full h-full object-cover opacity-10 dark:opacity-30 dark:brightness-0 dark:invert transition-all duration-700 scale-110"
                                             alt="Background"
                                         />
                                         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background-light/40 to-background-light dark:via-background-dark/40 dark:to-background-dark"></div>
@@ -246,7 +243,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ content, toggleTheme }) => {
                         case 'appShowcase':
                             if (!(content.appShowcase?.visible ?? true)) return null;
                             return (
-                                <section key="appShowcase" className="hidden md:block py-32 px-6 bg-white dark:bg-stone-900 border-b border-stone-100 dark:border-stone-800">
+                                <section key="appShowcase" className="hidden md:block py-32 px-6 bg-white dark:bg-background-surface border-b border-stone-100 dark:border-stone-800">
                                     <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-16">
                                         <div className="lg:w-1/2 space-y-8">
                                             <div className="inline-flex items-center px-4 py-1.5 rounded-full border border-gold/30 bg-gold/5 mb-4">
@@ -326,7 +323,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ content, toggleTheme }) => {
                         case 'features':
                             if (!content.features.visible) return null;
                             return (
-                                <section key="features" className="py-32 px-6 bg-stone-50 dark:bg-stone-900/50">
+                                <section key="features" className="py-32 px-6 bg-stone-50 dark:bg-background-surface/50">
                                     <div className="max-w-7xl mx-auto space-y-16">
                                         <div className="text-center space-y-6">
                                             <div className="inline-flex items-center px-4 py-1 rounded-full border border-gold/30 bg-gold/5">
@@ -337,7 +334,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ content, toggleTheme }) => {
 
                                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                                             {content.features.items?.map((feature) => (
-                                                <div key={feature.id} className="p-8 rounded-3xl bg-white dark:bg-stone-900 border border-stone-100 dark:border-stone-800 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
+                                                <div key={feature.id} className="p-8 rounded-3xl bg-white dark:bg-background-surface border border-stone-100 dark:border-stone-800 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
                                                     <div className="w-12 h-12 rounded-full bg-gold/10 flex items-center justify-center mb-6 group-hover:bg-gold group-hover:text-white transition-colors duration-300">
                                                         <span className="material-icons-outlined text-gold group-hover:text-white transition-colors">{feature.icon}</span>
                                                     </div>
@@ -408,7 +405,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ content, toggleTheme }) => {
                                 <section key="support" className="relative py-32 px-6 overflow-hidden bg-stone-50 dark:bg-background-dark/30">
                                     {content.support.backgroundImage && (
                                         <div className="absolute inset-0 z-0">
-                                            <img src={content.support.backgroundImage} className="w-full h-full object-cover opacity-10" alt="Support Background" />
+                                            <img src={content.support.backgroundImage} className="w-full h-full object-cover opacity-10 dark:opacity-30 dark:brightness-0 dark:invert transition-all duration-700" alt="Support Background" />
                                             <div className="absolute inset-0 bg-gradient-to-b from-stone-50/90 to-stone-50 dark:from-background-dark/90 dark:to-background-dark"></div>
                                         </div>
                                     )}
@@ -427,7 +424,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ content, toggleTheme }) => {
                                             </div>
                                         </div>
 
-                                        <div className="relative p-12 md:p-16 bg-white dark:bg-stone-900 rounded-3xl shadow-xl border border-stone-100 dark:border-stone-800 space-y-8 group overflow-hidden">
+                                        <div className="relative p-12 md:p-16 bg-white dark:bg-background-surface rounded-3xl shadow-xl border border-stone-100 dark:border-stone-800 space-y-8 group overflow-hidden">
                                             <div className="absolute top-0 right-0 w-32 h-32 bg-gold/5 blur-3xl rounded-full -mr-16 -mt-16"></div>
                                             <div className="relative z-10 space-y-6">
                                                 <h3 className="text-3xl md:text-4xl font-display italic text-stone-900 dark:text-white">{content.support.cardTitle}</h3>
@@ -449,10 +446,10 @@ const LandingPage: React.FC<LandingPageProps> = ({ content, toggleTheme }) => {
                             if (!content.footerCta.visible) return null;
                             return (
                                 <section key="footerCta" className="py-32 px-6">
-                                    <div className="max-w-6xl mx-auto bg-stone-950 rounded-3xl p-20 md:p-32 text-center text-white overflow-hidden relative group shadow-3xl">
+                                    <div className="max-w-6xl mx-auto bg-stone-900 border border-stone-100/10 dark:bg-background-dark/80 rounded-3xl p-20 md:p-32 text-center text-white overflow-hidden relative group shadow-3xl transition-colors duration-500">
                                         {content.footerCta.backgroundImage && (
                                             <div
-                                                className="absolute inset-0 opacity-10 group-hover:scale-110 transition-transform duration-1000"
+                                                className="absolute inset-0 opacity-10 dark:opacity-30 dark:brightness-0 dark:invert group-hover:scale-110 transition-transform duration-1000"
                                                 style={{ backgroundImage: `url('${content.footerCta.backgroundImage}')` }}
                                             ></div>
                                         )}
@@ -482,13 +479,22 @@ const LandingPage: React.FC<LandingPageProps> = ({ content, toggleTheme }) => {
             {content.footer.visible && (
                 <footer className="py-32 px-6 border-t border-stone-100 dark:border-stone-800 bg-white dark:bg-background-dark">
                     <div className="max-w-7xl mx-auto space-y-20 text-center">
-                        <div className="flex flex-col items-center space-y-4">
-                            <div className="text-4xl font-serif font-bold group inline-block">
-                                Oremos Juntos<span className="text-gold group-hover:animate-ping inline-block">.</span>
+                        <div className="flex flex-col items-center space-y-4 relative">
+                            <div className="flex flex-col items-center">
+                                <img src="/brand/logo.png" alt="Oremos Juntos" className="h-[84px] w-auto object-contain mb-2 dark:brightness-0 dark:invert" />
                             </div>
                             <a href={content.footer?.websiteLink || "#"} target="_blank" rel="noopener noreferrer" className="text-[10px] font-bold tracking-[0.3em] uppercase text-stone-400 hover:text-gold transition-colors">
                                 {content.footer?.websiteLink || "www.oremosjuntos.com.br"}
                             </a>
+
+                            {/* Discreet CMS Access */}
+                            <button
+                                onClick={handleCMSClick}
+                                className="absolute -bottom-16 opacity-[0.03] hover:opacity-10 dark:opacity-[0.01] dark:hover:opacity-5 transition-opacity text-[8px] font-bold uppercase tracking-[0.5em] p-4"
+                                title="Acesso Admin"
+                            >
+                                CMS
+                            </button>
                         </div>
                         <div className="flex flex-wrap justify-center gap-16 text-[10px] font-bold tracking-[0.4em] uppercase text-stone-400">
                             <button className="hover:text-primary dark:hover:text-white transition-colors" onClick={() => setActiveModal('privacy')}>Privacidade</button>
@@ -509,7 +515,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ content, toggleTheme }) => {
             {isRegistrationOpen && (
                 <div className="fixed inset-0 z-[110] flex items-center justify-center p-6 animate-in fade-in duration-300">
                     <div className="absolute inset-0 bg-stone-900/95 backdrop-blur-2xl" onClick={() => setIsRegistrationOpen(false)} />
-                    <div className="relative w-full max-w-xl bg-white dark:bg-stone-900 rounded-3xl p-10 shadow-2xl text-center">
+                    <div className="relative w-full max-w-xl bg-white dark:bg-background-surface rounded-3xl p-10 shadow-2xl text-center">
                         {registrationSuccess ? (
                             <div className="space-y-8 animate-in zoom-in duration-500">
                                 <span className="material-icons-outlined text-8xl text-gold">check_circle</span>
@@ -572,7 +578,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ content, toggleTheme }) => {
 
             {/* Bottom Nav Simulation - Now Dynamic & Conditional */}
             {content.appFeatures.visible && (
-                <nav className="fixed bottom-0 left-0 right-0 bg-white dark:bg-stone-950 border-t border-stone-100 dark:border-stone-900 z-[90] px-6 py-4 pb-[calc(1rem+env(safe-area-inset-bottom))] sm:hidden">
+                <nav className="fixed bottom-0 left-0 right-0 bg-white dark:bg-background-dark border-t border-stone-100 dark:border-stone-900 z-[90] px-6 py-4 pb-[calc(1rem+env(safe-area-inset-bottom))] sm:hidden">
                     <div className="flex items-center justify-between max-w-lg mx-auto">
                         {content.appFeatures?.items?.map((feature) => (
                             <NavItem

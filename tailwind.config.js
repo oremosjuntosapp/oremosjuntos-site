@@ -10,7 +10,8 @@ export default {
       colors: {
         primary: "#1C1917",
         "background-light": "#FAFAF9",
-        "background-dark": "#0C0A09",
+        "background-dark": "#1C1917", // Warmer and slightly lighter espresso
+        "background-surface": "#262320", // Warmer stone/brownish surface
         accent: "#F5F5F4",
         gold: "#D4AF37",
         clay: "#A8A29E"

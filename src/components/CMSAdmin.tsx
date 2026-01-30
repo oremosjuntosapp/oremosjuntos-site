@@ -1,6 +1,6 @@
 
-import React, { useState } from 'react';
-import { CMSContent } from '../types';
+import React, { useState, useEffect } from 'react';
+import { CMSContent, Lead } from '../types';
 import { supabase } from '../supabaseClient';
 import { Input, TextArea, Toggle } from './cms/CMSField';
 import { CMSSection } from './cms/CMSSection';
@@ -14,8 +14,57 @@ interface CMSAdminProps {
 
 const CMSAdmin: React.FC<CMSAdminProps> = ({ content, onSave, onClose }) => {
   const [editedContent, setEditedContent] = useState<CMSContent>(content);
-  const [activeTab, setActiveTab] = useState<keyof CMSContent | 'config'>('hero');
+  const [activeTab, setActiveTab] = useState<keyof CMSContent | 'config' | 'leads'>('hero');
+  const [leads, setLeads] = useState<Lead[]>([]);
   const { showToast } = useNotification();
+
+  useEffect(() => {
+    if (activeTab === 'leads') {
+      fetchLeads();
+    }
+  }, [activeTab]);
+
+  const fetchLeads = async () => {
+    const { data, error } = await supabase
+      .from('leads')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      showToast('Erro ao carregar lista de interesse.', 'error');
+      console.error('Fetch Leads Error:', error);
+    } else {
+      setLeads(data || []);
+    }
+  };
+
+  const handleToggleLeadContacted = async (leadId: string, currentStatus: boolean) => {
+    const { error } = await supabase
+      .from('leads')
+      .update({ contacted: !currentStatus })
+      .eq('id', leadId);
+
+    if (error) {
+      showToast('Erro ao atualizar status.', 'error');
+    } else {
+      setLeads(prev => prev.map(l => l.id === leadId ? { ...l, contacted: !currentStatus } : l));
+    }
+  };
+
+  const handleDeleteLead = async (leadId: string) => {
+    if (!confirm('Tem certeza que deseja excluir este contato?')) return;
+
+    const { error } = await supabase
+      .from('leads')
+      .delete()
+      .eq('id', leadId);
+
+    if (error) {
+      showToast('Erro ao excluir contato.', 'error');
+    } else {
+      setLeads(prev => prev.filter(l => l.id !== leadId));
+    }
+  };
 
   const handleChange = (section: keyof CMSContent, field: string, value: any) => {
     setEditedContent(prev => {
@@ -150,6 +199,7 @@ const CMSAdmin: React.FC<CMSAdminProps> = ({ content, onSave, onClose }) => {
 
 
   const tabs = [
+    { id: 'leads', label: 'Lista de Interesse', icon: 'people' },
     { id: 'config', label: 'Configurações', icon: 'settings' },
     { id: 'layout', label: 'Ordem das Seções', icon: 'reorder' }, // New Hierarchy Tab
     { id: 'hero', label: 'Hero (Topo)', icon: 'home' },
@@ -435,22 +485,64 @@ const CMSAdmin: React.FC<CMSAdminProps> = ({ content, onSave, onClose }) => {
           </CMSSection>
         );
 
+      case 'leads':
+        return (
+          <CMSSection title="Lista de Interessados (Leads)">
+            <p className="text-xs text-stone-500 mb-6 px-4">Esta lista contém as pessoas que preencheram o formulário de lançamento.</p>
+            <div className="space-y-3">
+              {leads.length === 0 ? (
+                <div className="p-8 text-center text-stone-400 italic text-sm">Nenhum interessado registrado ainda.</div>
+              ) : (
+                leads.map((lead) => (
+                  <div key={lead.id} className={`p-5 bg-white dark:bg-stone-800 border rounded-2xl flex items-center justify-between transition-all ${lead.contacted ? 'border-stone-100 dark:border-stone-800 opacity-60' : 'border-amber-100 dark:border-amber-900/30 border-l-4 border-l-gold shadow-sm'}`}>
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-3">
+                        <span className="text-sm font-bold text-stone-900 dark:text-stone-100">{lead.name}</span>
+                        {lead.contacted && (
+                          <span className="px-2 py-0.5 rounded-full bg-stone-100 dark:bg-stone-700 text-[8px] font-bold uppercase tracking-widest text-stone-500">Contactado</span>
+                        )}
+                      </div>
+                      <div className="flex flex-col text-xs text-stone-400">
+                        <span className="flex items-center gap-1"><span className="material-icons-outlined text-xs">email</span> {lead.email}</span>
+                        <span className="flex items-center gap-1 mt-1"><span className="material-icons-outlined text-xs">calendar_today</span> {new Date(lead.created_at).toLocaleDateString()}</span>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => handleToggleLeadContacted(lead.id, lead.contacted)}
+                        className={`p-2 rounded-full transition-colors ${lead.contacted ? 'bg-stone-100 text-stone-400 hover:bg-amber-50 hover:text-gold' : 'bg-amber-50 text-gold hover:bg-gold hover:text-white'}`}
+                        title={lead.contacted ? "Marcar como não contactado" : "Marcar como contactado"}
+                      >
+                        <span className="material-icons-outlined text-sm">{lead.contacted ? 'undo' : 'check'}</span>
+                      </button>
+                      <button
+                        onClick={() => handleDeleteLead(lead.id)}
+                        className="p-2 rounded-full bg-red-50 text-red-400 hover:bg-red-500 hover:text-white transition-colors"
+                        title="Excluir Lead"
+                      >
+                        <span className="material-icons-outlined text-sm">delete</span>
+                      </button>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          </CMSSection>
+        );
+
       default:
         return null;
     }
   };
 
   return (
-    <div className="flex flex-col md:flex-row h-screen bg-stone-100 dark:bg-stone-950 overflow-hidden">
+    <div className="flex flex-col md:flex-row h-screen bg-stone-100 dark:bg-background-dark overflow-hidden">
       {/* Sidebar Navigation */}
-      <div className="w-full md:w-64 max-h-[35vh] md:max-h-full bg-white dark:bg-stone-900 border-r border-stone-200 dark:border-stone-800 overflow-y-auto shrink-0">
+      <div className="w-full md:w-64 max-h-[35vh] md:max-h-full bg-white dark:bg-background-surface border-r border-stone-200 dark:border-stone-800 overflow-y-auto shrink-0">
         <div className="p-6 md:p-8 border-b border-stone-100 dark:border-stone-800">
-          <div className="flex items-center space-x-3">
-            <span className="material-icons-outlined text-gold text-2xl">settings</span>
-            <div>
-              <h2 className="text-xl font-display italic text-stone-900 dark:text-white">CMS</h2>
-              <p className="text-[9px] font-bold uppercase tracking-widest text-stone-400">Oremos Juntos</p>
-            </div>
+          <div className="flex items-center justify-center -ml-2">
+            <img src="/brand/logo.png" alt="Oremos Juntos" className="h-16 w-auto object-contain dark:brightness-0 dark:invert" />
           </div>
         </div>
 
@@ -479,7 +571,7 @@ const CMSAdmin: React.FC<CMSAdminProps> = ({ content, onSave, onClose }) => {
 
       {/* Content Editor Area */}
       <div className="flex-1 flex flex-col h-full overflow-hidden">
-        <header className="px-8 py-6 bg-white/80 dark:bg-stone-900/80 backdrop-blur-md border-b border-stone-200 dark:border-stone-800 flex justify-between items-center z-10">
+        <header className="px-8 py-6 bg-white/80 dark:bg-background-surface/80 backdrop-blur-md border-b border-stone-200 dark:border-stone-800 flex justify-between items-center z-10">
           <h1 className="text-2xl font-display italic text-stone-900 dark:text-white">
             {tabs.find(t => t.id === activeTab)?.label}
           </h1>

@@ -28,8 +28,8 @@ const AdminPage: React.FC<AdminPageProps> = ({ content, onSave }) => {
 
     if (!isAuthenticated) {
         return (
-            <div className="min-h-screen flex items-center justify-center p-6 bg-stone-100 dark:bg-stone-950">
-                <div className="w-full max-w-sm bg-white dark:bg-stone-900 rounded-[2.5rem] p-12 shadow-2xl text-center space-y-8 animate-in fade-in zoom-in duration-500">
+            <div className="min-h-screen bg-stone-100 dark:bg-background-dark flex items-center justify-center p-6">
+                <div className="w-full max-w-md bg-white dark:bg-background-surface rounded-3xl p-10 shadow-2xl space-y-8">
                     <div className="space-y-4">
                         <span className="material-icons-outlined text-4xl text-gold">lock</span>
                         <h2 className="text-3xl font-display italic text-stone-900 dark:text-white">Acesso Restrito</h2>

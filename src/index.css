@@ -11,7 +11,7 @@
   }
 
   body {
-    @apply antialiased bg-stone-50 text-stone-900 dark:bg-stone-950 dark:text-stone-50;
+    @apply antialiased bg-stone-50 text-stone-900 dark:bg-background-dark dark:text-stone-50;
   }
 }
 
